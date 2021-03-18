@@ -60,9 +60,8 @@ O usuário deve solicitar um token e uma chave para a API do Trello. Os testes r
 **Então** os cartões são atribuídas a um ArrayList
 
 
-### **Cenário 8:** Criar Quadro
->**Dado** o usuário possui chave e token da API do Trello
-**E** houver saldo disponível no banco de vagas
-**Quando** existir demanda para novas vagas
-**E** não ultrapassar o limite do saldo
-**Então** o gestor de banco 
+### **Cenário 8:** Excluir Quadro
+>**Dado** o usuário possui quadros criados
+**Quando** existir demanda para exclusão do quadro
+**E** possui o identificador do quadro que deseja excluir
+**Então** o quadro será exluído via DELETE 

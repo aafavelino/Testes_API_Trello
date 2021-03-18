@@ -18,6 +18,17 @@ A ordem de execução dos testes importa, por este motivo a execução foi orden
 
 Alguns casos de testes foram parametrizados, caso deseje alterar algum basta usar a anotação acima do método. 
 
+Os testes resumiram-se aos fluxos básicos e de exceções relacionados aos cards do Trello.   
+
+## Arquivos de código fonte
+
+O teste possui dois arquivos, um para guardar informações sobre os parâmetros e outro para a realização dos testes.
+
+|  Arquivo                       | 		Descrição			  |	
+|-------------------------------|-------------------------|
+|TrelloTest.java|Possui todos os cenários de testes solicitados nos casos de uso.|
+|Trello.java|Possui informações e variáveis de acesso à plataforma da API do Trello, caso deseje alterar algum dos parâmetros, basta atualizar as variáveis presentes nesse arquivo.|
+
 ## Importação 
 
 A importação pode ser feita através do clone em qualquer IDE.
