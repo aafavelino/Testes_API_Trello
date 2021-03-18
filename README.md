@@ -18,7 +18,13 @@ A ordem de execução dos testes importa, por este motivo a execução foi orden
 
 Alguns casos de testes foram parametrizados, caso deseje alterar algum basta usar a anotação acima do método. 
 
+## Importação 
 
+A importação pode ser feita através do clone em qualquer IDE.
+
+| Arquivos | Descrição |
+| ------ | ------ |
+| Cenários | [https://github.com/aafavelino/Testes_API_Trello/Cenarios.md[PlDb] |
 
 
 
