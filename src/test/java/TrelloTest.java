@@ -4,31 +4,30 @@
  */
 
 import io.restassured.response.Response;
+import junitparams.Parameters;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.junit.runners.Parameterized;
+
+import javax.xml.bind.annotation.XmlValue;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+
 import static io.restassured.RestAssured.*;
 
-
-public class TrelloTestes {
-
-    private static Trello trello = new Trello();
-
-    /**
-     * Variáveis de apoio aos testes. Cabe salientar que a execução isolada de
-     * alguns métodos pode causar instabilidades nas variáveis, portanto sugiro
-     * executar os testes através do método fluxoDeExecucao().
-     */
-    String id;
-    ArrayList<String> ids_lists = new ArrayList<String>();
-    ArrayList<String> ids_cards = new ArrayList<String>();
-
+@RunWith(junitparams.JUnitParamsRunner.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class TrelloTest {
 
     @BeforeClass
     public static void caminhoPrefixo () {
-        baseURI = trello.getCaminho();
+        baseURI = Trello.getCaminho();
     }
 
     /**
@@ -40,18 +39,20 @@ public class TrelloTestes {
      * o fluxo e colher a informação sobre o ID, trabalhando com ele
      * até a destruição de todos os cartões e quadro.
      */
+
     @Test
-    public void criarBoard() {
+    @Parameters(value = {"Testes API",""})
+    public void a_criarBoard(String nome) {
         Response response =
                 (Response) given().contentType("application/json")
-                        .queryParams("key",trello.getKey())
-                        .queryParams("token",trello.getToken())
-                        .queryParams("name","Testes da API do Trello")
+                        .queryParams("key",Trello.getKey())
+                        .queryParams("token",Trello.getToken())
+                        .queryParams("name",nome)
                         .when().post("boards/");
                         response.then()
                         .statusCode(200)
                         .log().all();
-                       id = response.jsonPath().getString("id");
+                       Trello.id = response.jsonPath().getString("id");
     }
 
     /**
@@ -60,12 +61,12 @@ public class TrelloTestes {
      * gratuita é limitada.
      */
     @Test
-    public void deletarBoard() {
+    public void h_deletarBoard() {
         given().contentType("application/json")
-                .queryParams("key", trello.getKey())
-                .queryParams("token", trello.getToken())
+                .queryParams("key", Trello.getKey())
+                .queryParams("token", Trello.getToken())
                 .when()
-                .delete("boards/" + id + "/")
+                .delete("boards/" + Trello.id + "/")
                 .then()
                 .statusCode(200)
                 .log().all();
@@ -77,27 +78,28 @@ public class TrelloTestes {
      * trabalhar com os cartões.
      */
     @Test
-    public void getList() {
+    public void b_getList() {
         Response response =
                 (Response) given().contentType("application/json")
-                        .queryParams("key",trello.getKey())
-                        .queryParams("token",trello.getToken())
+                        .queryParams("key",Trello.getKey())
+                        .queryParams("token",Trello.getToken())
                         .when()
-                        .get("boards/"+id+"/lists");
+                        .get("boards/"+Trello.id+"/lists");
                         response.then().log().all();
-                        ids_lists.addAll(Arrays.asList(response.jsonPath().getString("id").replace("[","").replace("]","").replace(" ","").split(",")));
+                        Trello.ids_lists.addAll(Arrays.asList(response.jsonPath().getString("id").replace("[","").replace("]","").replace(" ","").split(",")));
     }
 
     /**
      * Método responsável por criar um cartão na primeira lista.
      */
     @Test
-    public void criarCard() {
+    @Parameters(value = {"Card 1", "Card 2",""})
+    public void c_criarCard(String nome) {
         given().contentType("application/json")
-                .queryParams("key",trello.getKey())
-                .queryParams("token",trello.getToken())
-                .queryParams("idList", ids_lists.get(0))
-                .queryParams("name","Criando um Card")
+                .queryParams("key",Trello.getKey())
+                .queryParams("token",Trello.getToken())
+                .queryParams("idList",  Trello.ids_lists.get(0))
+                .queryParams("name",nome)
                 .when()
                 .post("cards/")
                 .then()
@@ -111,15 +113,15 @@ public class TrelloTestes {
      * cada cartão entre as listas.
      */
     @Test
-    public void getCards() {
+    public void d_getCards() {
         Response response =
                 (Response) given().contentType("application/json")
-                        .queryParams("key",trello.getKey())
-                        .queryParams("token",trello.getToken())
+                        .queryParams("key",Trello.getKey())
+                        .queryParams("token",Trello.getToken())
                         .when()
-                        .get("boards/"+id+"/cards");
+                        .get("boards/"+ Trello.id+"/cards");
         response.then().log().all();
-        ids_cards.addAll(Arrays.asList(response.jsonPath().getString("id").replace("[","").replace("]","").replace(" ","").split(",")));
+        Trello.ids_cards.addAll(Arrays.asList(response.jsonPath().getString("id").replace("[","").replace("]","").replace(" ","").split(",")));
     }
 
     /**
@@ -128,14 +130,15 @@ public class TrelloTestes {
      * para validar o solicitado.
      */
     @Test
-    public void editarCard() {
+    @Parameters("Card Editado")
+    public void e_editarCard(String nome) {
         given().contentType("application/json")
-                .queryParams("key", trello.getKey())
-                .queryParams("token", trello.getToken())
-                .queryParam("name","Card Editado")
+                .queryParams("key", Trello.getKey())
+                .queryParams("token", Trello.getToken())
+                .queryParam("name",nome)
                 .queryParam("closed","true")
                 .when()
-                .put("cards/" + ids_cards.get(0))
+                .put("cards/" +  Trello.ids_cards.get(1))
                 .then()
                 .statusCode(200)
                 .log().all();
@@ -146,15 +149,14 @@ public class TrelloTestes {
      * lista para a lista que a sucede.
      */
     @Test
-    public void moverCards() {
-        for (int i = 0; i < ids_cards.size(); i++) {
+    public void f_moverCards() {
+        for (int i = 0; i <  Trello.ids_cards.size(); i++) {
             given().contentType("application/json")
-                    .queryParams("key", trello.getKey())
-                    .queryParams("token", trello.getToken())
-                    .queryParams("idList", (ids_lists.size() > 1)?ids_lists.get(1):ids_lists.get(0))
-                    .queryParam("name","Card Movido")
+                    .queryParams("key", Trello.getKey())
+                    .queryParams("token", Trello.getToken())
+                    .queryParams("idList", ( Trello.ids_lists.size() > 1)? Trello.ids_lists.get(1): Trello.ids_lists.get(0))
                     .when()
-                    .put("cards/" + ids_cards.get(i))
+                    .put("cards/" +  Trello.ids_cards.get(i))
                     .then()
                     .statusCode(200)
                     .log().all();
@@ -165,36 +167,15 @@ public class TrelloTestes {
      * Método responsável por apagar todos os cartões criados.
      */
     @Test
-    public void apagarCards() {
+    @RepeatedTest(1)
+    public void g_apagarCards() {
         for (int i = 0; i < 1; i++) {
             given().contentType("application/json")
                     .when()
-                    .delete("cards/" + ids_cards.get(i))
+                    .delete("cards/" +  Trello.ids_cards.get(i))
                     .then()
                     .log().all();
        }
-        ids_cards.clear();
-    }
-
-
-    /**
-     * Neste método é feita a execução do fluxo completo, sendo necessário mudanças
-     * nos parâmetros caso queira executar os métodos isolados.
-     */
-    @Test
-    public void fluxoDeExecucao() {
-        criarBoard();
-        getList();
-        criarCard();
-        criarCard();
-        getCards();
-        editarCard();
-        moverCards();
-        apagarCards();
-    }
-
-    @After
-    public void limparDados() {
-        deletarBoard();
+        Trello.ids_cards.clear();
     }
 }
