@@ -24,7 +24,7 @@ A importação pode ser feita através do clone em qualquer IDE.
 
 | Arquivos | Descrição |
 | ------ | ------ |
-| Cenários | [https://github.com/aafavelino/Testes_API_Trello/Cenarios.md[PlDb] |
+| Cenários | https://github.com/aafavelino/Testes_API_Trello/blob/master/Cenarios.md|
 
 
 
