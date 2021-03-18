@@ -61,6 +61,7 @@ public class TrelloTest {
      * gratuita é limitada.
      */
     @Test
+    @RepeatedTest(1)
     public void h_deletarBoard() {
         given().contentType("application/json")
                 .queryParams("key", Trello.getKey())
