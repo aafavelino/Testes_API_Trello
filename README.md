@@ -22,10 +22,16 @@ Alguns casos de testes foram parametrizados, caso deseje alterar algum basta usa
 
 A importação pode ser feita através do clone em qualquer IDE.
 
+## Testes
+
 | Arquivos | Descrição |
 | ------ | ------ |
 | Cenários | https://github.com/aafavelino/Testes_API_Trello/blob/master/Cenarios.md|
+| Erros | https://github.com/aafavelino/Testes_API_Trello/blob/master/Erros.md|
 
 
+## Autor 
 
- 
+|  Nome                       | 		Email			  |			 			Contato				  |
+|-------------------------------|-------------------------|-------------------------------------------|
+| Adelino Afonso Fernandes Avelino			    | adelino18fernandes@gmail.com   | (84) 98634-8534		  |
